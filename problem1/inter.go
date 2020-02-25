@@ -22,6 +22,13 @@ func findIntersection(strArr []string) string {
 	return strings.Join(rtn, ", ")
 
 }
+
+//"3x + 12 = 46"
+//output 4
+// Input:"4 - 2 = x"
+// Output:2
+// Input:"1x0 * 12 = 1200"
+// Output:0
 func missingDigit(str string) string {
 
 	equal := "="
@@ -29,14 +36,18 @@ func missingDigit(str string) string {
 		return ""
 	}
 	spl := strings.Split(str, " ")
-
+	if len(spl) < 5 {
+		return ""
+	}
 	isX := 0
 	num1 := 0
 	num2 := 0
+	nm := ""
 	for i := range spl {
 		num, err := strconv.Atoi(spl[i])
-		if err != nil {
+		if err != nil && strings.Index(spl[i], "x") != -1 {
 			isX = i
+			nm = spl[i]
 			continue
 		}
 		if num1 == 0 {
@@ -46,35 +57,45 @@ func missingDigit(str string) string {
 		}
 
 	}
-
+	res := ""
 	switch spl[1] {
 	case "+":
 		if isX > 2 {
-			return strconv.Itoa(num1 + num2)
+			res = strconv.Itoa(num1 + num2)
+			break
 		}
-		return strconv.Itoa(num2 - num1)
+		res = strconv.Itoa(num2 - num1)
 	case "-":
 		if isX > 2 {
-			return strconv.Itoa(num1 - num2)
+			res = strconv.Itoa(num1 - num2)
+			break
 		} else if isX == 0 {
-			return strconv.Itoa(num1 + num2)
+			res = strconv.Itoa(num1 + num2)
+			break
 		}
-		return strconv.Itoa(num1 - num2)
+		res = strconv.Itoa(num1 - num2)
 	case "*":
 		if isX > 2 {
-			return strconv.Itoa(num1 * num2)
+			res = strconv.Itoa(num1 * num2)
+			break
 		}
-		return strconv.Itoa(num2 / num1)
+		res = strconv.Itoa(num2 / num1)
 	case "/":
 		if isX > 2 {
-			return strconv.Itoa(num1 / num2)
+			res = strconv.Itoa(num1 / num2)
+			break
 		} else if isX == 0 {
-			return strconv.Itoa(num1 * num2)
+			res = strconv.Itoa(num1 * num2)
+			break
 		}
-		return strconv.Itoa(num1 / num2)
+		res = strconv.Itoa(num1 / num2)
+	}
+	if len(nm) > 1 {
+		ix := strings.Index(nm, "x")
+		return res[ix : ix+1]
 	}
 	// code goes here
-	return ""
+	return res
 
 }
 
